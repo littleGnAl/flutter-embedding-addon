@@ -21,7 +21,7 @@ class Add2AppActivity : AppCompatActivity() {
 
     // Declare a local variable to reference the FlutterFragment so that you
 // can forward calls to it later.
-    private var flutterFragment: NewFlutterFragment? = null
+    private var flutterFragment: FlutterViewFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +33,12 @@ class Add2AppActivity : AppCompatActivity() {
 
             Handler().postDelayed({
                 Log.d("MainActivity", "push a new Activity with route: $it")
-                val flutterFragment: FlutterFragment = FlutterFragment
-                    .withCachedEngine("cache_engine")
-                    .transparencyMode(FlutterView.TransparencyMode.transparent)
-                    .renderMode(FlutterView.RenderMode.texture)
-                    .build()
+                val flutterFragment: FlutterViewFragment = FlutterViewFragment()
+//                    .withCachedEngine("cache_engine")
+//                    .transparencyMode(FlutterView.TransparencyMode.transparent)
+//                    .renderMode(FlutterView.RenderMode.texture)
+//                    .shouldAttachEngineToActivity(false)
+//                    .build()
                 supportFragmentManager
                     .beginTransaction()
                     .add(
@@ -67,9 +68,12 @@ class Add2AppActivity : AppCompatActivity() {
 //                .commit()
         }, popCallback = {
             Handler().postDelayed({
-                Log.d("MainActivity", "pop")
-                onBackPressed()
+//                Log.d("MainActivity", "pop")
+
             }, 300)
+
+            Log.d("MainActivity", "pop")
+            supportFragmentManager.popBackStack()
         })
 
         val fragmentManager: FragmentManager = supportFragmentManager
@@ -79,16 +83,17 @@ class Add2AppActivity : AppCompatActivity() {
         // Attempt to find an existing FlutterFragment, in case this is not the
 // first time that onCreate() was run.
         flutterFragment = fragmentManager
-            .findFragmentByTag(TAG_FLUTTER_FRAGMENT) as? NewFlutterFragment
+            .findFragmentByTag(TAG_FLUTTER_FRAGMENT) as? FlutterViewFragment
 
         // Create and attach a FlutterFragment if one does not exist.
         // Create and attach a FlutterFragment if one does not exist.
         if (flutterFragment == null) {
-            flutterFragment = NewFlutterFragment
-                .withCachedEngine("cache_engine")
-                .transparencyMode(FlutterView.TransparencyMode.transparent)
-                .renderMode(FlutterView.RenderMode.texture)
-                .build()
+            flutterFragment = FlutterViewFragment()
+//                .withCachedEngine("cache_engine")
+//                .transparencyMode(FlutterView.TransparencyMode.transparent)
+//                .shouldAttachEngineToActivity(false)
+//                .renderMode(FlutterView.RenderMode.texture)
+//                .build()
             fragmentManager
                 .beginTransaction()
                 .add(
@@ -96,6 +101,7 @@ class Add2AppActivity : AppCompatActivity() {
                     flutterFragment as Fragment,
                     TAG_FLUTTER_FRAGMENT
                 )
+//                .addToBackStack(null)
                 .commit()
 
             navigationChannel.pushRoute("/first_page")

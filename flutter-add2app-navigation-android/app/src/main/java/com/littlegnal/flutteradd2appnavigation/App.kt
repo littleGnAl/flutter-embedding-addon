@@ -29,5 +29,7 @@ class App : Application() {
         flutterEngine.navigationChannel.setInitialRoute("/")
         flutterEngine.dartExecutor.executeDartEntrypoint(DartExecutor.DartEntrypoint.createDefault())
         FlutterEngineCache.getInstance().put("cache_engine", flutterEngine)
+
+        FlutterViewCache.init(this)
     }
 }

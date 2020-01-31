@@ -291,15 +291,15 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
         // causes launching Activitys to wait a second or two before launching. By post()'ing this
         // behavior we are able to move this blocking logic to after the Activity's launch.
         // TODO(mattcarroll): figure out how to avoid blocking the MAIN thread when connecting a surface
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                Log.v(TAG, "Attaching FlutterEngine to FlutterView.");
-                flutterView.attachToFlutterEngine(flutterEngine);
-
-                doInitialFlutterViewRun();
-            }
-        });
+//        new Handler().post(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.v(TAG, "Attaching FlutterEngine to FlutterView.");
+//                flutterView.attachToFlutterEngine(flutterEngine);
+//
+//                doInitialFlutterViewRun();
+//            }
+//        });
     }
 
     /**
@@ -349,7 +349,11 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
     void onResume() {
         Log.v(TAG, "onResume()");
         ensureAlive();
-        flutterEngine.getLifecycleChannel().appIsResumed();
+//        flutterEngine.getLifecycleChannel().appIsResumed();
+
+        flutterView.attachToFlutterEngine(flutterEngine);
+
+        doInitialFlutterViewRun();
     }
 
     /**
@@ -386,7 +390,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
     void onPause() {
         Log.v(TAG, "onPause()");
         ensureAlive();
-        flutterEngine.getLifecycleChannel().appIsInactive();
+//        flutterEngine.getLifecycleChannel().appIsInactive();
     }
 
     /**
@@ -404,7 +408,7 @@ import static android.content.ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW;
         Log.v(TAG, "onStop()");
         ensureAlive();
 //        flutterEngine.getLifecycleChannel().appIsPaused();
-        flutterView.detachFromFlutterEngine();
+//        flutterView.detachFromFlutterEngine();
     }
 
     /**

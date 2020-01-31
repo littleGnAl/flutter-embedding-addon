@@ -30,11 +30,11 @@ class GlobalNavigator {
 
   bool pop<T extends Object>({bool isPushNative = false, T result}) {
     if (globalNavigatorKey.currentState.canPop()) {
+      
+      var result = globalNavigatorKey.currentState.pop<T>();
       if (isPushNative) {
         popNative();
       }
-      var result = globalNavigatorKey.currentState.pop<T>();
-      
       return result;
     }
 
