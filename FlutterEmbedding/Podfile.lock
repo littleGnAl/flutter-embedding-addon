@@ -1,0 +1,28 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_embedding_addon (0.0.1):
+    - Flutter
+  - FlutterPluginRegistrant (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `../flutter_embedding_addon/.ios/Flutter/engine`)
+  - flutter_embedding_addon (from `../flutter_embedding_addon/.ios/Flutter`)
+  - FlutterPluginRegistrant (from `../flutter_embedding_addon/.ios/Flutter/FlutterPluginRegistrant`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: "../flutter_embedding_addon/.ios/Flutter/engine"
+  flutter_embedding_addon:
+    :path: "../flutter_embedding_addon/.ios/Flutter"
+  FlutterPluginRegistrant:
+    :path: "../flutter_embedding_addon/.ios/Flutter/FlutterPluginRegistrant"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_embedding_addon: 9c6e55f3ae668fd828c9f629b0e7d14d830516a0
+  FlutterPluginRegistrant: d59dd07dd90e9c6430996073575a5bd1ea19677e
+
+PODFILE CHECKSUM: b4131ea5ff9826002c9cb2ce1eeb5146103855e6
+
+COCOAPODS: 1.8.4
