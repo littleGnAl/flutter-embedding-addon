@@ -3,8 +3,6 @@ For the better experience when adding [Flutter to the existing APP](https://flut
 
 This project show you how to lazily creates and manages `FlutterEngine` on Android and iOS. In this way, we can better solve the problem of page navigation like `Flutter -> Native -> Flutter`, and the project sample shows such a scenario.
 
-*NOTE*: The iOS version is still in progress.
-
 ## Build
 1. Open the `flutter_embedding_addon` directory, and build the android aar.
     ```
