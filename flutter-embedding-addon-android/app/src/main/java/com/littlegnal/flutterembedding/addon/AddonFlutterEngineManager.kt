@@ -19,7 +19,6 @@ package com.littlegnal.flutterembedding.addon
 import android.content.Context
 import io.flutter.Log
 import io.flutter.embedding.engine.FlutterEngine
-import java.lang.ref.WeakReference
 
 class AddonFlutterEngineManager private constructor() {
 
@@ -43,16 +42,16 @@ class AddonFlutterEngineManager private constructor() {
    */
   var cacheFlutterEngineThreshold = 2
 
-  private val activeEngines = mutableListOf<Pair<String, WeakReference<FlutterEngine>>>()
-  private val eventChannels = mutableListOf<Pair<String, WeakReference<AddonEngineEventChannel>>>()
+  private val activeEngines = mutableListOf<String>()
+  private val eventChannels = mutableListOf<Pair<String, AddonEngineEventChannel>>()
 
   fun getFlutterEngine(context: Context): FlutterEngine {
     val cachedEngineIds = AddonFlutterEngineCache.instance.getCachedEngineIds()
     val cachedEngineIdsSize = cachedEngineIds.size
     val activeEngineSize = activeEngines.size
     if (cachedEngineIds.isNotEmpty() && activeEngineSize < cachedEngineIdsSize) {
-      val existEngineId = cachedEngineIds.first {
-        activeEngines.none { (key, _) -> key == it }
+      val existEngineId = cachedEngineIds.first { key ->
+        activeEngines.none { key == it }
       }
 
       var engine = AddonFlutterEngineCache.instance.get(existEngineId)
@@ -64,7 +63,7 @@ class AddonFlutterEngineManager private constructor() {
         engine = createFlutterEngine(context)
       }
       Log.d(TAG, "Active a cached engine: $engine, id: $existEngineId")
-      activeEngines.add(existEngineId to WeakReference(engine))
+      activeEngines.add(existEngineId)
       return engine
     }
 
@@ -91,15 +90,15 @@ class AddonFlutterEngineManager private constructor() {
         eventChannels.asSequence()
           .filter { (key, _) -> key != cacheEngineKey }
           .forEach { (_, eventChannel) ->
-            eventChannel.get()?.sendEvent(eventName, arguments)
+            eventChannel.sendEvent(eventName, arguments)
           }
 
         true
       }
-    eventChannels.add(cacheEngineKey to WeakReference(eventChannel))
+    eventChannels.add(cacheEngineKey to eventChannel)
 
     Log.d(TAG, "An engine: $flutterEngine has been active with key: $cacheEngineKey")
-    activeEngines.add(cacheEngineKey to WeakReference(flutterEngine))
+    activeEngines.add(cacheEngineKey)
 
     return flutterEngine
   }
@@ -123,7 +122,7 @@ class AddonFlutterEngineManager private constructor() {
   fun inactiveEngine() {
     if (activeEngines.isNotEmpty()) {
       val cachedEngineIds = AddonFlutterEngineCache.instance.getCachedEngineIds()
-      val (key, _) = activeEngines.last()
+      val key = activeEngines.last()
       val removeEventChannelIndex = eventChannels.indexOfLast { (k, _) ->
         !cachedEngineIds.contains(key) && k == key
       }
