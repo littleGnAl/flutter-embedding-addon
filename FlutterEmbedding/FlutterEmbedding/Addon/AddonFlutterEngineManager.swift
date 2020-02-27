@@ -17,21 +17,6 @@ import Flutter
 import FlutterPluginRegistrant
 import os.log
 
-struct WeakObject<T: AnyObject>: Equatable {
-  private weak var value: T?
-  init(value: T) {
-    self.value = value
-  }
-  
-  func get() -> T? {
-    return value
-  }
-  
-  static func == (lhs: WeakObject<T>, rhs: WeakObject<T>) -> Bool {
-    return lhs.value === rhs.value
-  }
-}
-
 class AddonFlutterEngineManager {
   private static let TAG = "AddonFlutterEngineManager"
   
@@ -42,7 +27,7 @@ class AddonFlutterEngineManager {
   */
   var cacheFlutterEngineThreshold = 2
   
-  private var activeEngines = [(String, WeakObject<FlutterEngine>)]()
+  private var activeEngines = [String]()
   private var eventChannels = [(String, AddonEngineEventChannel)]()
   
   private init() { }
@@ -53,8 +38,8 @@ class AddonFlutterEngineManager {
     let activeEngineSize = activeEngines.count
     if (!cachedEngineIds.isEmpty && activeEngineSize < cachedEngineIdsSize) {
       let existEngineId = cachedEngineIds.first(where: { (key) -> Bool in
-        return !activeEngines.contains { (e: (String, WeakObject<FlutterEngine>)) -> Bool in
-          return e.0 == key as String
+        return !activeEngines.contains {
+          return $0 == key as String
         }
       })!
       
@@ -69,7 +54,7 @@ class AddonFlutterEngineManager {
              AddonFlutterEngineManager.TAG,
              engine!,
              existEngineId)
-      activeEngines.append((existEngineId, WeakObject(value: engine!)))
+      activeEngines.append(existEngineId)
       
       return engine!
     }
@@ -106,7 +91,7 @@ class AddonFlutterEngineManager {
            AddonFlutterEngineManager.TAG,
            flutterEngine,
            cacheEngineId)
-    activeEngines.append((cacheEngineId, WeakObject(value: flutterEngine)))
+    activeEngines.append(cacheEngineId)
     
     return flutterEngine
   }
@@ -129,7 +114,7 @@ class AddonFlutterEngineManager {
   func inactiveEngine() {
     if !activeEngines.isEmpty {
       let cachedEngineIds = AddonFlutterEngineCache.shared.getCachedEngineIds()
-      let (key, _) = activeEngines.last!
+      let key = activeEngines.last!
       let removeEventChannelIndex = eventChannels.lastIndex { (k, _) -> Bool in
         !cachedEngineIds.contains(key) && k == key
       } ?? -1
