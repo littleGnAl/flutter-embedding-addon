@@ -1,0 +1,7 @@
+/.gradle
+/captures/
+/local.properties
+GeneratedPluginRegistrant.java
+.idea/*
+!.idea/codeStyles
+!.idea/copyright
